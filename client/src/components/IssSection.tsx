@@ -53,9 +53,8 @@ export function IssSection() {
 
         if (position.timestamp !== lastTimestampRef.current) {
           lastTimestampRef.current = position.timestamp;
-          trailRef.current = [...trailRef.current, [position.latitude, position.longitude]].slice(
-            -MAX_TRAIL_POINTS
-          );
+          const newPoint: Point = [position.latitude, position.longitude];
+          trailRef.current = [...trailRef.current, newPoint].slice(-MAX_TRAIL_POINTS);
         }
 
         setState({ status: "success", position, trail: trailRef.current });
