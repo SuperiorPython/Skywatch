@@ -1,0 +1,350 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0e1a;
+  --bg-elevated: #141830;
+  --border: #262c4a;
+  --text: #e8ebf7;
+  --text-muted: #9aa3c7;
+  --accent: #6ea8fe;
+  --danger: #ff8a8a;
+  --chart-surface: var(--bg-elevated);
+  --chart-grid: var(--border);
+  --chart-axis: var(--text-muted);
+  --series-1: #3987e5;
+  --series-2: #d95926; 
+  --series-3: #199e70; 
+  --status-critical: #e66767; 
+  --dot_muted: #6b7280
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at top, #131735 0%, var(--bg) 60%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.error {
+  color: var(--danger);
+}
+
+.section {
+  margin-top: 2.5rem;
+}
+
+.section h2 {
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.apod-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.apod-media {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+}
+
+.apod-video {
+  aspect-ratio: 16 / 9;
+  border: none;
+}
+
+.apod-meta h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 720px) {
+  .apod-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Exoplanets */
+
+.exoplanets-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: var(--chart-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.chart-card h3 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.chart-tooltip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  max-width: 220px;
+}
+
+.chart-tooltip .tooltip-title {
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.chart-tooltip .tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--text-muted);
+}
+
+.chart-tooltip .tooltip-row strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.table-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.table-controls input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.9rem;
+  flex: 1;
+  max-width: 320px;
+}
+
+.data-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table thead th {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  position: sticky;
+  top: 0;
+}
+
+.data-table thead th:hover {
+  color: var(--text);
+}
+
+.data-table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td.numeric {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.table-note {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+/* Space weather */
+
+.type-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  flex-shrink: 0;
+}
+
+.feed-heading {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.event-feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.event-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 0.65rem 0.85rem;
+}
+
+.event-item:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.event-item-body {
+  min-width: 0;
+}
+
+.event-item-headline {
+  font-size: 0.9rem;
+}
+
+.event-item-meta {
+  font-size: 0.78rem;
+  margin-top: 0.15rem;
+}
+
+/* ISS tracker */
+
+.iss-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.iss-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.stat-tile {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3rem;
+}
+
+.stat-value {
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value-time {
+  font-size: 1.1rem;
+}
+
+.iss-map-wrap {
+  height: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #1a1a19; /* shows briefly while tiles load */
+}
+
+.iss-map-wrap .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
+}
+
+.iss-marker-dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--series-1);
+  box-shadow: 0 0 0 0 rgba(57, 135, 229, 0.55);
+  animation: iss-pulse 2s ease-out infinite;
+}
+
+@keyframes iss-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(57, 135, 229, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(57, 135, 229, 0);
+  }
+}
+
+/* Restyle Leaflet's default light chrome to match the dark theme */
+.leaflet-control-attribution {
+  background: rgba(20, 24, 48, 0.85) !important;
+  color: var(--text-muted) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--text) !important;
+}
+
+.leaflet-bar a {
+  background: var(--bg-elevated) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.leaflet-bar a:hover {
+  background: var(--border) !important;
+}
+
+@media (max-width: 640px) {
+  .iss-stats {
+    grid-template-columns: 1fr;
+  }
+}

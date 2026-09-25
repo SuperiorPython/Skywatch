@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build --workspace=client"
+  publish = "client/dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Sends browser requests for /api/* to the Express app running as a
+# Netlify Function instead, keeping the same relative /api/... paths the
+# client already fetches in dev (see client/src/lib/api.ts).
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Client-side routing fallback (not currently used — the app is a single
+# page — but harmless to have, and needed if routes get added later).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
