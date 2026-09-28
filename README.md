@@ -1,5 +1,7 @@
 # Skywatch
 
+**Live demo:** [orbital-skywatch.netlify.app](https://orbital-skywatch.netlify.app/)
+
 An interactive space dashboard built on NASA's public APIs, with a React +
 TypeScript frontend (not another Streamlit app) and a small Express backend
 that proxies and caches NASA API calls.
@@ -23,34 +25,67 @@ skywatch/
   server/   Express + TypeScript backend (NASA API proxy + cache)
 ```
 
-## Getting started
+## Deploying to Netlify
 
-You'll need a free NASA API key from https://api.nasa.gov/ (instant signup,
-no approval wait). Without one, the app falls back to `DEMO_KEY`, which is
-capped at 30 requests/hour and 50/day — fine for a quick look, not for real
-use.
+Netlify hosts the built frontend as a static site and runs the Express
+backend as a single serverless function (`netlify/functions/api.ts`, wired
+up via `netlify.toml`) — no separate server to manage. The client's `/api/...`
+fetches work unchanged in production; Netlify redirects them to the
+function.
+
+1. Push this repo to GitHub if it isn't already there.
+2. On [netlify.com](https://app.netlify.com), **Add new site → Import an
+   existing project**, and pick this repo. Netlify reads `netlify.toml`
+   automatically, so the build command and publish directory are already
+   set — you shouldn't need to type anything into those fields.
+3. Before the first deploy (or right after, then redeploy), add your NASA
+   key: **Site configuration → Environment variables → Add a variable** →
+   name `NASA_API_KEY`, value your real key. This is separate from both
+   `server/.env` and the `NASA_API_KEY` GitHub Actions secret — all three
+   are independent copies of the same key.
+4. Deploy. Netlify gives you a `https://<something>.netlify.app` URL —
+   open it and the whole dashboard should work. (This project's own
+   deploy lives at
+   [orbital-skywatch.netlify.app](https://orbital-skywatch.netlify.app/).)
+
+Prefer a one-off deploy without connecting GitHub at all? The
+[Netlify CLI](https://docs.netlify.com/cli/get-started/) supports that
+too: `npm install -g netlify-cli`, then `netlify deploy --prod` from the
+repo root (after `netlify login` and `netlify init`).
+
+A couple of things that are different in this deployment vs. local dev:
+the in-memory response cache (`server/src/lib/cache.ts`) only survives
+between requests when Netlify happens to reuse a "warm" function
+container — a cold start clears it, so don't be surprised by an
+occasional slower first load. And `CLIENT_ORIGIN` (used for CORS
+locally) doesn't need to be set on Netlify, since the frontend and the
+function are served from the same domain there.
+
+## CI: weekly NASA API key health check
+
+`.github/workflows/nasa-key-health.yml` hits `api.nasa.gov` every Monday and
+fails the run (which GitHub emails you about by default) if the key is
+missing, invalid, or rate-limited — catching a dead key before you go to
+demo this instead of during. It can also be triggered manually from the
+Actions tab.
+
+To enable it, add your NASA API key as a repository secret named
+`NASA_API_KEY`: repo **Settings → Secrets and variables → Actions → New
+repository secret**. This is separate from `server/.env` — the workflow
+never reads your local `.env` file.
+
+You can run the same check locally (reads `server/.env`):
 
 ```bash
-# 1. Install dependencies (run once, from the repo root)
-npm install
-
-# 2. Configure your NASA API key
-cp server/.env.example server/.env
-# then edit server/.env and set NASA_API_KEY=your_key_here
-
-# 3. Run both the backend and frontend in dev mode
-npm run dev
+npm run check:nasa-key
 ```
-
-The backend runs on http://localhost:8787 and the frontend dev server on
-http://localhost:5173 (Vite proxies `/api` requests to the backend — see
-`client/vite.config.ts`).
 
 ## Notes
 
 - The backend caches each NASA endpoint response in memory for a short TTL
   so the dashboard doesn't burn through the rate limit on every page
   refresh (see `server/src/lib/cache.ts`).
-- This project intentionally skips Streamlit/Altair (used in
-  [Playlist-DNA-App](https://github.com/SuperiorPython/Playlist-DNA-App)) in
-  favor of a hand-built React frontend.
+- The ISS tracker resets its trail whenever the gap between two readings is
+  much larger than the poll interval (e.g. the tab was backgrounded and the
+  browser throttled its timer) instead of drawing a straight line across the
+  globe between two unrelated positions.
