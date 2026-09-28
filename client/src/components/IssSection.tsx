@@ -52,9 +52,23 @@ export function IssSection() {
         if (cancelled) return;
 
         if (position.timestamp !== lastTimestampRef.current) {
+          const previousTimestamp = lastTimestampRef.current;
           lastTimestampRef.current = position.timestamp;
           const newPoint: Point = [position.latitude, position.longitude];
-          trailRef.current = [...trailRef.current, newPoint].slice(-MAX_TRAIL_POINTS);
+
+          // A backgrounded tab (or a sleeping laptop) can stall this interval
+          // for far longer than POLL_MS — browsers throttle or fully pause
+          // timers in hidden tabs. The ISS completes an orbit every ~92 min,
+          // so a stale-enough gap means the next reading could be almost
+          // anywhere on Earth. Connecting it to the old trail with a straight
+          // line draws a chord across the whole map instead of a flight path.
+          // Starting a fresh trail on a big gap keeps the line meaningful.
+          const gapSeconds = previousTimestamp === null ? 0 : position.timestamp - previousTimestamp;
+          const gapTooLarge = gapSeconds > (POLL_MS / 1000) * 3;
+
+          trailRef.current = gapTooLarge
+            ? [newPoint]
+            : [...trailRef.current, newPoint].slice(-MAX_TRAIL_POINTS);
         }
 
         setState({ status: "success", position, trail: trailRef.current });
