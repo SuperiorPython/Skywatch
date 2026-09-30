@@ -1,21 +1,31 @@
 :root {
   color-scheme: dark;
-  --bg: #0b0e1a;
-  --bg-elevated: #141830;
-  --border: #262c4a;
-  --text: #e8ebf7;
-  --text-muted: #9aa3c7;
-  --accent: #6ea8fe;
-  --danger: #ff8a8a;
+  /* "Terminal / Mission Ops" look: near-black surfaces, amber accent, sharp
+     corners, monospace for headings/labels/data — sans stays for prose. */
+  --bg: #0a0a0c;
+  --bg-elevated: #141416;
+  --border: #2c2c2a;
+  --text: #eef1ea;
+  --text-muted: #9aa89f;
+  --accent: #eda100;
+  --danger: #ff6b5e;
+  --radius: 3px;
+  --radius-sm: 2px;
+
+  /* dataviz tokens (dark-surface steps from the shared palette) — unchanged
+     by the look: these are validated for colorblind-safety against the
+     actual data and stay fixed across every visual theme. */
   --chart-surface: var(--bg-elevated);
   --chart-grid: var(--border);
   --chart-axis: var(--text-muted);
-  --series-1: #3987e5;
-  --series-2: #d95926; 
-  --series-3: #199e70; 
-  --status-critical: #e66767; 
-  --dot_muted: #6b7280
+  --series-1: #3987e5; /* categorical slot 1, blue */
+  --series-2: #d95926; /* categorical slot 2, orange */
+  --series-3: #199e70; /* categorical slot 3, aqua */
+  --status-critical: #e66767; /* dark-surface critical/hazardous */
+  --dot-muted: #6b7280; /* de-emphasis gray for "everything else" in emphasis charts */
+
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 }
 
 * {
@@ -24,7 +34,7 @@
 
 body {
   margin: 0;
-  background: radial-gradient(ellipse at top, #131735 0%, var(--bg) 60%);
+  background: var(--bg);
   color: var(--text);
   min-height: 100vh;
 }
@@ -36,6 +46,7 @@ body {
 }
 
 .app-header h1 {
+  font-family: var(--font-mono);
   font-size: 2rem;
   margin-bottom: 0.25rem;
   letter-spacing: 0.02em;
@@ -43,6 +54,38 @@ body {
 
 .muted {
   color: var(--text-muted);
+}
+
+.tab-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.tab-header-home {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tab-header-home:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.tab-header-current {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text);
+  font-weight: 600;
 }
 
 .error {
@@ -54,6 +97,7 @@ body {
 }
 
 .section h2 {
+  font-family: var(--font-mono);
   font-size: 1.25rem;
   border-bottom: 1px solid var(--border);
   padding-bottom: 0.5rem;
@@ -66,13 +110,13 @@ body {
   gap: 1.5rem;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 1.25rem;
 }
 
 .apod-media {
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: block;
   object-fit: cover;
 }
@@ -83,6 +127,7 @@ body {
 }
 
 .apod-meta h3 {
+  font-family: var(--font-mono);
   margin-top: 0;
 }
 
@@ -103,11 +148,12 @@ body {
 .chart-card {
   background: var(--chart-surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 1.25rem;
 }
 
 .chart-card h3 {
+  font-family: var(--font-mono);
   margin-top: 0;
   font-size: 1rem;
 }
@@ -115,13 +161,14 @@ body {
 .chart-tooltip {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 0.6rem 0.75rem;
   font-size: 0.85rem;
   max-width: 220px;
 }
 
 .chart-tooltip .tooltip-title {
+  font-family: var(--font-mono);
   color: var(--text);
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -150,7 +197,7 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 0.45rem 0.65rem;
   font-size: 0.9rem;
   flex: 1;
@@ -160,13 +207,14 @@ body {
 .data-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
 }
 
 .data-table th,
@@ -216,6 +264,7 @@ body {
 }
 
 .feed-heading {
+  font-family: var(--font-mono);
   font-size: 1rem;
   margin: 0 0 0.75rem;
 }
@@ -227,7 +276,7 @@ body {
   max-height: 360px;
   overflow-y: auto;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .event-item {
@@ -250,6 +299,7 @@ body {
 }
 
 .event-item-meta {
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   margin-top: 0.15rem;
 }
@@ -271,11 +321,12 @@ body {
 .stat-tile {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 0.85rem 1rem;
 }
 
 .stat-label {
+  font-family: var(--font-mono);
   color: var(--text-muted);
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -284,6 +335,7 @@ body {
 }
 
 .stat-value {
+  font-family: var(--font-mono);
   font-size: 1.35rem;
   font-variant-numeric: tabular-nums;
 }
@@ -294,12 +346,15 @@ body {
 
 .iss-map-wrap {
   height: 420px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--border);
   background: #1a1a19; /* shows briefly while tiles load */
 }
 
+/* Fake a dark basemap from plain OSM tiles (no gated dark-tile provider
+   needed) by inverting only the tile layer — markers, the polyline trail,
+   and the attribution control live in other panes and are unaffected. */
 .iss-map-wrap .leaflet-tile-pane {
   filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
 }
@@ -325,7 +380,7 @@ body {
 
 /* Restyle Leaflet's default light chrome to match the dark theme */
 .leaflet-control-attribution {
-  background: rgba(20, 24, 48, 0.85) !important;
+  background: rgba(20, 20, 22, 0.85) !important;
   color: var(--text-muted) !important;
 }
 
@@ -346,5 +401,105 @@ body {
 @media (max-width: 640px) {
   .iss-stats {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Home globe (landing screen) */
+
+.home-globe-wrap {
+  height: 520px;
+  width: 100%;
+  cursor: grab;
+}
+
+.home-globe-wrap:active {
+  cursor: grabbing;
+}
+
+/* Rendered by react-globe.gl into a tooltip div it manages itself, from the
+   raw HTML string returned by pointLabel — not part of the React tree, so
+   it has to be styled globally like this rather than with a scoped class. */
+.globe-pin-tooltip {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+.globe-pin-tooltip-down {
+  border-color: var(--status-critical);
+  color: var(--status-critical);
+}
+
+/* Floating labels anchored to each pin (see HomeGlobe's htmlElement) —
+   real DOM nodes the library repositions every frame, so plain CSS here,
+   no scoping tricks needed. */
+.globe-pin-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.globe-pin-label:hover {
+  background: var(--accent);
+  color: #0a0a0c;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.globe-pin-label-down {
+  border-color: var(--status-critical);
+  color: var(--status-critical);
+}
+
+.globe-pin-label-down:hover {
+  background: var(--status-critical);
+  color: #0a0a0c;
+}
+
+/* Shown in a tab whose feed failed its health check */
+
+.feature-unavailable {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--status-critical);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  max-width: 640px;
+}
+
+.feature-unavailable p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.feature-unavailable-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 0.3rem;
+  border-radius: 50%;
+  background: var(--status-critical);
+  flex-shrink: 0;
+  animation: status-pulse 2s ease-out infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-critical) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--status-critical) 0%, transparent);
   }
 }
