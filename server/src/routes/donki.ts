@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchNasa, isoDate } from "../lib/nasaClient.js";
+import { fetchDonki, isoDate } from "../lib/nasaClient.js";
 import { cached, TTL } from "../lib/cache.js";
 
 export const donkiRouter = Router();
@@ -45,9 +45,9 @@ donkiRouter.get("/", async (req, res) => {
   try {
     const events = await cached(`space-weather:${days}`, TTL.SIX_HOURS, async () => {
       const [flares, cmes, storms] = await Promise.all([
-        fetchNasa<SolarFlare[]>("/DONKI/FLR", { startDate, endDate }),
-        fetchNasa<CoronalMassEjection[]>("/DONKI/CME", { startDate, endDate }),
-        fetchNasa<GeomagneticStorm[]>("/DONKI/GST", { startDate, endDate }),
+          fetchDonki<SolarFlare[]>("FLR", { startDate, endDate }),
+          fetchDonki<CoronalMassEjection[]>("CME", { startDate, endDate }),
+          fetchDonki<GeomagneticStorm[]>("GST", { startDate, endDate }),
       ]);
 
       const merged: SpaceWeatherEvent[] = [
